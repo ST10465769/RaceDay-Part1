@@ -10,7 +10,10 @@
 
 ## Project Description
 
-RaceDay is a full-stack web-based event management system designed specifically for the South African road running, walking, and cycling community. The platform allows Event Organisers to create and manage events, categories, and participant results, while Participants can browse upcoming events, enter events, track their personal performance history, and prepare for race day.
+RaceDay is a web-based event management system built for the South African road running, walking and
+cycling community. Organisers can create and manage events, define age or distance categories, and
+capture participant results. Participants can browse upcoming events, enter an event by selecting a
+category, track their enrolments, and view their personal race history.
 
 ## User Roles
 
@@ -64,16 +67,12 @@ RaceDay is a full-stack web-based event management system designed specifically 
    - Drop existing RaceDayDB 
    - Create a new RaceDayDB database
    - Create all 6 tables
-   - Insert sample data
-
+   
 ## CI/CD
 
-GitHub Actions workflow validates the repository structure by checking:
-- `/docs` folder exists
-- ERD file exists
-- API Endpoint Plan file exists
-- SQL script file exists
-- README.md exists
+The `part1-ci.yml` workflow runs on every push and pull request. It checks that the `/docs` folder exists
+and that the ERD, API endpoint plan, SQL script and README are all present, giving a green check mark
+when the repository structure is correct.
 
 ### Successful Build Screenshot
 <img width="877" height="686" alt="Screenshot 2026-09-02 110739" src="https://github.com/user-attachments/assets/62749fe8-27f2-4f39-8ff4-c5bcc06acff1" />
