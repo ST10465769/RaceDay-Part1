@@ -186,10 +186,10 @@ INSERT INTO Notification (UserID, Message, IsRead) VALUES
 -- END OF SCRIPT
 -- ============================================================
 
--- Verification queries (optional - uncomment to run)
--- SELECT * FROM `User`;
--- SELECT * FROM Event;
--- SELECT * FROM Category;
--- SELECT * FROM Enrolment;
--- SELECT * FROM Result;
--- SELECT * FROM Notification;
+-- Verification queries 
+SELECT * FROM `User`;
+SELECT * FROM Event;
+SELECT * FROM Category;
+SELECT * FROM Enrolment;
+SELECT * FROM Result;
+SELECT * FROM Notification;
