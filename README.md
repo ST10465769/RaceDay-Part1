@@ -50,6 +50,8 @@ RaceDay is a full-stack web-based event management system designed specifically 
 - **Seed Data**: 2 Organisers, 2 Participants, 3 Events, Categories, Enrolments, Results, Notifications
 
 ## Repository Structure
+<img width="472" height="275" alt="Screenshot 2026-09-02 123510" src="https://github.com/user-attachments/assets/e989da1c-a224-4486-a17b-9f1091270301" />
+
 
 
 ## Database Setup
