@@ -1,5 +1,13 @@
 # RaceDay Part-1
 
+## Student Information
+
+- **Student Name**: SIMAMKELE KINOLA KAULELA
+- **Student Number**: ST10465769
+- **Module**: PROG6212 - Programming 2B
+- **Assessment**: POE Part 1 
+- **Date**: 2/09/2026
+
 ## Project Description
 
 RaceDay is a full-stack web-based event management system designed specifically for the South African road running, walking, and cycling community. The platform allows Event Organisers to create and manage events, categories, and participant results, while Participants can browse upcoming events, enter events, track their personal performance history, and prepare for race day.
@@ -83,14 +91,6 @@ GitHub Actions workflow validates the repository structure by checking:
 - SQL script live demonstration in SSMS
 - Verification of seeded sample data
 - GitHub Actions green build
-
-## Submission Information
-
-- **Student Name**: SIMAMKELE KINOLA KAULELA
-- **Student Number**: ST10465769
-- **Module**: PROG6212 - Programming 2B
-- **Assessment**: POE Part 1 
-- **Date**: 2/09/2026
 
 ## References
 
