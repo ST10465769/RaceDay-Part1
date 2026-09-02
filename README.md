@@ -88,7 +88,7 @@ GitHub Actions workflow validates the repository structure by checking:
 - GitHub repository walkthrough
 - ERD explanation (entities, relationships, cardinality)
 - API Endpoint Plan explanation
-- SQL script live demonstration in SSMS
+- SQL script live demonstration in MySQL workbench
 - Verification of seeded sample data
 - GitHub Actions green build
 
