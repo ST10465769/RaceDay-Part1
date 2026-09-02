@@ -84,7 +84,7 @@ The GitHub Actions workflow validates the repository structure by checking:
 
 
 
-## Video Demonstration
+## Video Presentation
 YouTube link:
 https://youtu.be/W6uhLkQWaiU
 
