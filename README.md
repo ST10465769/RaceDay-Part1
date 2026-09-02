@@ -85,7 +85,7 @@ https://youtu.be/W6uhLkQWaiU
 
 
 ## Part 1 Video Content
-- Introduction to RaceDay system
+- Introduction
 - GitHub repository walkthrough
 - ERD explanation (entities, relationships, cardinality)
 - API Endpoint Plan explanation
