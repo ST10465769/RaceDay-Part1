@@ -70,9 +70,14 @@ category, track their enrolments, and view their personal race history.
    
 ## CI/CD
 
-The `part1-ci.yml` workflow runs on every push and pull request. It checks that the `/docs` folder exists
-and that the ERD, API endpoint plan, SQL script and README are all present, giving a green check mark
-when the repository structure is correct.
+## CI/CD - GitHub Actions
+
+The GitHub Actions workflow validates the repository structure by checking:
+- `/docs` folder exists
+- `RaceDay_ERD.pdf` exists
+- `RaceDay_API_Endpoint_Plan.pdf` exists
+- `RaceDay_Database.sql` exists
+- `README.md` exists
 
 ### Successful Build Screenshot
 <img width="877" height="686" alt="Screenshot 2026-09-02 110739" src="https://github.com/user-attachments/assets/62749fe8-27f2-4f39-8ff4-c5bcc06acff1" />
