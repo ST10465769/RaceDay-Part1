@@ -186,10 +186,18 @@ INSERT INTO Notification (UserID, Message, IsRead) VALUES
 -- END OF SCRIPT
 -- ============================================================
 
+<<<<<<< HEAD
 -- Verification queries 
+=======
+-- Verification queries
+>>>>>>> 3be2c7bd2a5a4f77227a59a3ca2d0c51cc3fc188
 SELECT * FROM `User`;
 SELECT * FROM Event;
 SELECT * FROM Category;
 SELECT * FROM Enrolment;
 SELECT * FROM Result;
+<<<<<<< HEAD
 SELECT * FROM Notification;
+=======
+SELECT * FROM Notification;
+>>>>>>> 3be2c7bd2a5a4f77227a59a3ca2d0c51cc3fc188
