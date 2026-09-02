@@ -61,7 +61,7 @@ RaceDay is a full-stack web-based event management system designed specifically 
 3. Open `docs/RaceDay_Database.sql`
 4. Execute the entire script
 5. The script will:
-   - Drop existing RaceDayDB if it exists
+   - Drop existing RaceDayDB 
    - Create a new RaceDayDB database
    - Create all 6 tables
    - Insert sample data
