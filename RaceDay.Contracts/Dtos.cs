@@ -84,10 +84,10 @@ public class CreateEventRequest
     [Required, StringLength(100)] public string EventName { get; set; } = string.Empty;
     [Required, StringLength(500)] public string Description { get; set; } = string.Empty;
     [Required] public DateTime EventDate { get; set; }
-    [Required, StringLength(150)] public string Location { get; set; } = string.Empty;
+    [Required, StringLength(200)] public string Location { get; set; } = string.Empty;
 
     // Distance in km. [Range] stops zero or negative values.
-    [Range(0.1, 1000)] public decimal Distance { get; set; }
+    [Range(0.1, 999.99)] public decimal Distance { get; set; }
 
     // Must be Run, Walk or Cycle. I check this in the controller.
     [Required] public string EventType { get; set; } = string.Empty;
@@ -126,8 +126,8 @@ public class EventDto
 public class CreateCategoryRequest
 {
     // e.g. Under 20, Senior, 10km, 21km
-    [Required, StringLength(100)] public string CategoryName { get; set; } = string.Empty;
-    [StringLength(250)] public string? Description { get; set; }
+    [Required, StringLength(50)] public string CategoryName { get; set; } = string.Empty;
+    [StringLength(200)] public string? Description { get; set; }
 }
 
 public class CategoryDto
@@ -168,7 +168,8 @@ public class EnrolmentDto
     public int ParticipantId { get; set; }
     public string ParticipantName { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;
-    public DateTime EnrolledOn { get; set; }
+    public DateTime EnrolmentDate { get; set; }
+
 }
 
 // ---------- Results ----------
