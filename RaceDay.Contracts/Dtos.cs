@@ -169,7 +169,6 @@ public class EnrolmentDto
     public string ParticipantName { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;
     public DateTime EnrolmentDate { get; set; }
-
 }
 
 // ---------- Results ----------
