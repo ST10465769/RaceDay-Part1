@@ -1,11 +1,13 @@
 ﻿namespace RaceDay.Api.Services;
 
-// Interface for our password hasher. This allows us to use Dependency Injection.
+// I use an interface so the controller doesn't depend on one specific hashing method,
+// and so my unit tests can swap it out later if needed
 public interface IPasswordHasher
 {
-    // Takes a plain text password and returns a secure hash
+    // Turns the plain password into a hash that is safe to store in the database
     string Hash(string password);
 
-    // Checks if a plain text password matches the stored hash (for login later)
+    // Checks if a plain password matches a hash that was stored earlier
     bool Verify(string password, string hash);
 }
+
