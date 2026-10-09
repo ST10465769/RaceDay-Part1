@@ -1,68 +1,129 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using RaceDay.Api.Data;          // This connects to your RaceDayDbContext
-using RaceDay.Api.Models;        // This connects to your AppUser class!
-using RaceDay.Api.Services;      // This connects to your IPasswordHasher
-using RaceDay.Contracts.Auth;    // This connects to your DTOs (RegisterRequest, UserResponse)
+using RaceDay.Api.Data;
+using RaceDay.Api.Models;
+using RaceDay.Api.Services;
+using RaceDay.Contracts;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace RaceDay.Api.Controllers;
 
+// Handles register, login and logout. These are the endpoints from my Part 1 plan.
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/auth")]
+[Tags("Auth")]
 public class AuthController : ControllerBase
 {
-    // Dependency Injection: We need the database and the password hasher.
     private readonly RaceDayDbContext _db;
     private readonly IPasswordHasher _passwordHasher;
 
+    // The database and the hasher are injected by ASP.NET (dependency injection)
     public AuthController(RaceDayDbContext db, IPasswordHasher passwordHasher)
     {
         _db = db;
         _passwordHasher = passwordHasher;
     }
 
-    // POST: api/auth/register
+    // POST /api/auth/register
     [HttpPost("register")]
-    public async Task<ActionResult<UserResponse>> Register(RegisterRequest request)
+    [SwaggerOperation(
+        Summary = "Register a new account",
+        Description = "Creates an Organiser or Participant account. The password is hashed before it is saved.")]
+    [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    public async Task<ActionResult<AuthResponse>> Register(RegisterRequest request)
     {
-        // Step 1: Check if the email is already in the database.
-        // We use _db.Users because that's what you named the DbSet in RaceDayDbContext.cs
-        if (await _db.Users.AnyAsync(u => u.Email == request.Email))
+        // The role has to be exactly Organiser or Participant (ignoring capital letters)
+        string role;
+        if (string.Equals(request.Role.Trim(), UserRoles.Organiser, StringComparison.OrdinalIgnoreCase))
         {
-            return Conflict("Email already registered.");
+            role = UserRoles.Organiser;
+        }
+        else if (string.Equals(request.Role.Trim(), UserRoles.Participant, StringComparison.OrdinalIgnoreCase))
+        {
+            role = UserRoles.Participant;
+        }
+        else
+        {
+            return BadRequest(new { message = "Role must be Organiser or Participant." });
         }
 
-        // Step 2: Create a new AppUser entity.
-        // IMPORTANT: Changed "new User" to "new AppUser" to match your Models folder.
+        // I lower-case the email so "A@x.com" and "a@x.com" count as the same account
+        string email = request.Email.Trim().ToLower();
+
+        // 409 Conflict if someone already registered with this email
+        if (await _db.Users.AnyAsync(u => u.Email == email))
+        {
+            return Conflict(new { message = "Email already registered." });
+        }
+
         var user = new AppUser
         {
-            Email = request.Email,
-
-            // Hashing the password before saving
-            PasswordHash = _passwordHasher.Hash(request.Password),
-
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-
-            // Default role for security
-            Role = "Participant"
+            FirstName = request.FirstName.Trim(),
+            LastName = request.LastName.Trim(),
+            Email = email,
+            PasswordHash = _passwordHasher.Hash(request.Password), // only the hash is saved
+            Role = role,
+            PhoneNumber = request.PhoneNumber
         };
 
-        // Step 3: Save the new user to the database.
-        // We add it to _db.Users (the DbSet) and then save.
         _db.Users.Add(user);
         await _db.SaveChangesAsync();
 
-        // Step 4: Map the AppUser entity to a UserResponse DTO.
-        var response = new UserResponse
+        // The response has no password or hash in it
+        return StatusCode(StatusCodes.Status201Created, ToResponse(user, "Registration successful."));
+    }
+
+    // POST /api/auth/login
+    [HttpPost("login")]
+    [SwaggerOperation(
+        Summary = "Log in",
+        Description = "Checks the email and password, then stores the UserId and Role in the session.")]
+    [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<AuthResponse>> Login(LoginRequest request)
+    {
+        string email = request.Email.Trim().ToLower();
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+        // Same message for "no such email" and "wrong password",
+        // so nobody can use the API to find out which emails are registered
+        if (user == null || !_passwordHasher.Verify(request.Password, user.PasswordHash))
         {
-            Id = user.UserId,  // <--- Fixed! Matches your AppUser.cs property
-            Email = user.Email,
+            return Unauthorized(new { message = "Invalid email or password." });
+        }
+
+        // This is the session: the server remembers who is logged in and their role
+        HttpContext.Session.SetInt32(SessionKeys.UserId, user.UserId);
+        HttpContext.Session.SetString(SessionKeys.Role, user.Role);
+
+        return Ok(ToResponse(user, "Login successful."));
+    }
+
+    // POST /api/auth/logout
+    [HttpPost("logout")]
+    [SwaggerOperation(
+        Summary = "Log out",
+        Description = "Clears the session so protected endpoints can't be used until the user logs in again.")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public IActionResult Logout()
+    {
+        HttpContext.Session.Clear();
+        return Ok(new { message = "Logged out." });
+    }
+
+    // Turns an AppUser into the AuthResponse DTO (never includes the password hash)
+    private static AuthResponse ToResponse(AppUser user, string message)
+    {
+        return new AuthResponse
+        {
+            UserId = user.UserId,
             FirstName = user.FirstName,
             LastName = user.LastName,
-            Role = user.Role
+            Email = user.Email,
+            Role = user.Role,
+            Message = message
         };
-
-        return StatusCode(StatusCodes.Status201Created, response);
     }
 }

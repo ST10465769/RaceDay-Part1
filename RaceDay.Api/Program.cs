@@ -1,6 +1,7 @@
-using RaceDay.Api.Services;
 using Microsoft.EntityFrameworkCore;
 using RaceDay.Api.Data;
+using RaceDay.Api.Services;
+
 namespace RaceDay.Api
 {
     public class Program
@@ -8,20 +9,32 @@ namespace RaceDay.Api
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
             // Connect to SQL Server using the connection string in appsettings.json
             builder.Services.AddDbContext<RaceDayDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // Add services to the container.
+            // The controller asks for IPasswordHasher and gets my PBKDF2 PasswordHasher
             builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+
+            // Sessions keep the logged-in UserId and Role on the server.
+            // The browser only gets a session cookie, not the data itself.
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+            // Swagger, with annotations turned on so I can describe each endpoint
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options => options.EnableAnnotations());
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -30,8 +43,9 @@ namespace RaceDay.Api
 
             app.UseHttpsRedirection();
 
+            // UseSession must come before MapControllers so controllers can read the session
+            app.UseSession();
             app.UseAuthorization();
-
 
             app.MapControllers();
 
@@ -39,3 +53,4 @@ namespace RaceDay.Api
         }
     }
 }
+
