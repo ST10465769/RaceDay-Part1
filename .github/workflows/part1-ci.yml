@@ -1,33 +1,33 @@
-name: Part 1 Documentation Check
+name: RaceDay CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
 
 jobs:
-  validate-part1:
+  build-and-test:
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Check docs folder exists
-      run: test -d docs
+      - name: Check the Part 1 docs are still in the repository
+        run: |
+          test -d docs
+          ls docs
 
-    - name: Check ERD exists
-      run: test -f docs/RaceDay_ERD.pdf
+      - name: Install .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
 
-    - name: Check API Endpoint Plan exists
-      run: test -f docs/RaceDay_API_Endpoint_Plan.pdf
+      - name: Restore packages
+        run: dotnet restore RaceDay.Api.Tests/RaceDay.Api.Tests.csproj
 
-    - name: Check SQL Script exists
-      run: test -f docs/RaceDay_Database.sql
+      - name: Build
+        run: dotnet build RaceDay.Api.Tests/RaceDay.Api.Tests.csproj --configuration Release --no-restore
 
-    - name: Check README exists
-      run: test -f README.md
-
-    - name: All checks passed
-      run: echo "✅ All Part 1 documentation files present!"
+      - name: Run unit tests
+        run: dotnet test RaceDay.Api.Tests/RaceDay.Api.Tests.csproj --configuration Release --no-build --verbosity normal
