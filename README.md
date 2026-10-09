@@ -104,3 +104,85 @@ https://youtu.be/W6uhLkQWaiU
 - MySQL Workbench Documentation
 - Draw.io Documentation
 
+---
+
+# Part 2 - RESTful API
+
+## Technologies Used
+- ASP.NET Core Web API (.NET 8), C#
+- Entity Framework Core 8 (Code First) with SQL Server
+- Swagger (Swashbuckle) for documentation and testing
+- xUnit with WebApplicationFactory and the EF Core in-memory provider for tests
+- GitHub Actions for CI
+
+## Project Structure
+- `RaceDay.Api` - controllers, models, DbContext, services, filters, migrations
+- `RaceDay.Contracts` - shared DTOs for requests and responses
+- `RaceDay.Api.Tests` - unit and integration tests
+- `docs` - Part 1 ERD, endpoint plan and SQL script
+
+## Database Setup
+1. Install SQL Server Express and open SSMS.
+2. In `RaceDay.Api/appsettings.json`, set `DefaultConnection` to your server (mine is `localhost\SQLEXPRESS`).
+3. In Package Manager Console (default project `RaceDay.Api`) run `Update-Database`, or in a terminal run `dotnet ef database update --project RaceDay.Api`.
+4. Open SSMS and confirm `RaceDayDb` has the tables `User`, `Event`, `Category`, `Enrolment`, `Result` and `Notification`.
+
+## How to Run the API
+1. Clone the repository and open the solution in Visual Studio 2022.
+2. Set `RaceDay.Api` as the startup project and press F5.
+3. Swagger opens at `http://localhost:5191/swagger`.
+
+## Authentication
+- Register hashes the password with PBKDF2 (random salt, 100,000 iterations). Only the hash is stored.
+- Login checks the hash and stores `UserId` and `Role` in a server-side session.
+- A `[SessionAuthorize]` filter protects endpoints: 401 if not logged in, 403 if the role is wrong.
+- Organisers can only change their own events, categories, enrolments and results.
+
+## API Endpoints
+| Method | Route | Role |
+|---|---|---|
+| POST | /api/auth/register | Public |
+| POST | /api/auth/login | Public |
+| POST | /api/auth/logout | Public |
+| GET | /api/users/profile | Any logged in |
+| PUT | /api/users/profile | Any logged in |
+| GET | /api/events | Any logged in |
+| GET | /api/events/mine | Organiser |
+| GET | /api/events/{id} | Any logged in |
+| POST | /api/events | Organiser |
+| PUT | /api/events/{id} | Organiser (owner) |
+| DELETE | /api/events/{id} | Organiser (owner) |
+| GET | /api/events/{eventId}/categories | Any logged in |
+| POST | /api/events/{eventId}/categories | Organiser (owner) |
+| PUT | /api/categories/{id} | Organiser (owner) |
+| DELETE | /api/categories/{id} | Organiser (owner) |
+| POST | /api/enrolments | Participant |
+| GET | /api/enrolments/mine | Participant |
+| GET | /api/enrolments/event/{eventId} | Organiser (owner) |
+| PUT | /api/enrolments/{id}/status | Organiser (owner) |
+| POST | /api/results | Organiser (owner) |
+| GET | /api/results/mine | Participant |
+| GET | /api/results/event/{eventId} | Organiser (owner) |
+
+## Differences from my Part 1 plan
+- The ERD and SQL script from Part 1 were written for MySQL. In Part 2 EF Core generates the same tables and columns for SQL Server. ENUM columns (Role, EventType, Status) became text columns, and the values are checked in the API.
+- I added `GET /api/events/mine`, `GET /api/enrolments/mine`, `GET /api/enrolments/event/{eventId}`, `PUT /api/enrolments/{id}/status` and the results routes so each role has a clear way to view its own data.
+- The Notification table exists in the database as in my ERD, but no Part 2 endpoint uses it.
+
+## Swagger
+Swagger lists the endpoints in six groups (Auth, Profile, Events, Categories, Enrolments, Results). Each endpoint has a summary, a description and its response codes.
+
+## Unit Testing
+Run `dotnet test RaceDay.Api.Tests/RaceDay.Api.Tests.csproj`, or use Test Explorer in Visual Studio. The tests use an in-memory database and cover registration, login, logout, profile access, event management, role enforcement, enrolments and results, with both success and failure cases.
+
+## CI/CD
+GitHub Actions restores, builds and tests the solution on every push.
+
+### GitHub Actions Screenshot
+![Green CI build](docs/ci-green-build.png)
+
+## Video Presentation
+[Part 2 video (unlisted YouTube)]([PASTE YOUR LINK HERE])
+
+## AI Disclosure
+I used an AI assistant (Claude) to help plan the project structure, to troubleshoot setup errors and to review my code. I tested the API in Swagger, ran all the tests and can explain the code in my video.
