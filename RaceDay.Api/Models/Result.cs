@@ -7,6 +7,7 @@ namespace RaceDay.Api.Models;
 // Result table from my ERD. The unique index on EnrolmentId makes sure
 // one enrolment can only ever have one result (1:1).
 [Index(nameof(EnrolmentId), IsUnique = true)]
+[Table("Result")]
 public class Result
 {
     [Key, Column("ResultID")]

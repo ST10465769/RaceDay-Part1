@@ -34,7 +34,7 @@ public class AppUser
     [Required, StringLength(255)]
     public string PasswordHash { get; set; } = string.Empty;
 
-    // "Organiser" or "Participant" (ENUM in my SQL script)
+    // "Organiser" or "Participant"
     [Required, StringLength(20)]
     public string Role { get; set; } = string.Empty;
 
@@ -47,7 +47,7 @@ public class AppUser
     public string? ProfilePictureUrl { get; set; }
 
     // Navigation properties: one user has many of these (1:M in my ERD)
-    public List<Event> Events { get; set; } = new();              // events an Organiser created
-    public List<Enrolment> Enrolments { get; set; } = new();      // events a Participant entered
+    public List<Event> Events { get; set; } = new();
+    public List<Enrolment> Enrolments { get; set; } = new();
     public List<Notification> Notifications { get; set; } = new();
 }

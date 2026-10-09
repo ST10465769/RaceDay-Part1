@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace RaceDay.Api.Models;
 
 // Notification table from my ERD (sixth entity). Each one belongs to a user.
+[Table("Notification")]
 public class Notification
 {
     [Key, Column("NotificationID")]
@@ -22,3 +23,4 @@ public class Notification
     [ForeignKey(nameof(UserId))]
     public AppUser User { get; set; } = null!;
 }
+

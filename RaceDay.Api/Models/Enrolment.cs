@@ -17,6 +17,8 @@ public static class EnrolmentStatuses
 // The unique index matches "unique_enrolment" in my SQL script,
 // so a participant can only enter the same event once.
 [Index(nameof(ParticipantId), nameof(EventId), IsUnique = true)]
+[Index(nameof(ParticipantId), nameof(EventId), IsUnique = true)]
+[Table("Enrolment")]
 public class Enrolment
 {
     [Key, Column("EnrolmentID")]

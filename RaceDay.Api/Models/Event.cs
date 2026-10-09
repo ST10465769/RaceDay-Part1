@@ -13,6 +13,7 @@ public static class EventTypes
 }
 
 // Event table from my ERD. Each event belongs to one Organiser.
+[Table("Event")]
 public class Event
 {
     [Key, Column("EventID")]

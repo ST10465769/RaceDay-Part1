@@ -1,3 +1,4 @@
+using RaceDay.Api.Services;
 using Microsoft.EntityFrameworkCore;
 using RaceDay.Api.Data;
 namespace RaceDay.Api
@@ -12,7 +13,7 @@ namespace RaceDay.Api
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             // Add services to the container.
-
+            builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

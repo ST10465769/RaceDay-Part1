@@ -5,6 +5,7 @@ namespace RaceDay.Api.Models;
 
 // Category table from my ERD, e.g. Under 30, Senior, 10km.
 // Every category belongs to one event.
+[Table("Category")]
 public class Category
 {
     [Key, Column("CategoryID")]

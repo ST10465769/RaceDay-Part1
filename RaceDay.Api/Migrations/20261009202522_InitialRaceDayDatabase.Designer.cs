@@ -12,7 +12,7 @@ using RaceDay.Api.Data;
 namespace RaceDay.Api.Migrations
 {
     [DbContext(typeof(RaceDayDbContext))]
-    [Migration("20261008231758_InitialRaceDayDatabase")]
+    [Migration("20261009202522_InitialRaceDayDatabase")]
     partial class InitialRaceDayDatabase
     {
         /// <inheritdoc />
@@ -104,7 +104,7 @@ namespace RaceDay.Api.Migrations
 
                     b.HasIndex("EventId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("RaceDay.Api.Models.Enrolment", b =>
@@ -145,7 +145,7 @@ namespace RaceDay.Api.Migrations
                     b.HasIndex("ParticipantId", "EventId")
                         .IsUnique();
 
-                    b.ToTable("Enrolments");
+                    b.ToTable("Enrolment");
                 });
 
             modelBuilder.Entity("RaceDay.Api.Models.Event", b =>
@@ -196,7 +196,7 @@ namespace RaceDay.Api.Migrations
 
                     b.HasIndex("OrganiserId");
 
-                    b.ToTable("Events");
+                    b.ToTable("Event");
                 });
 
             modelBuilder.Entity("RaceDay.Api.Models.Notification", b =>
@@ -226,7 +226,7 @@ namespace RaceDay.Api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notification");
                 });
 
             modelBuilder.Entity("RaceDay.Api.Models.Result", b =>
@@ -253,7 +253,7 @@ namespace RaceDay.Api.Migrations
                     b.HasIndex("EnrolmentId")
                         .IsUnique();
 
-                    b.ToTable("Results");
+                    b.ToTable("Result");
                 });
 
             modelBuilder.Entity("RaceDay.Api.Models.Category", b =>
