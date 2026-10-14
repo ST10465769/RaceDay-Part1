@@ -182,7 +182,7 @@ GitHub Actions restores, builds and tests the solution on every push.
 ![Green CI build](docs/ci-green-build.png)
 
 ## Video Presentation
-[Part 2 video (unlisted YouTube)]([PASTE YOUR LINK HERE])
+[Part 2 video https://youtu.be/eI4RgX5tkyw ]
 
 ## AI Disclosure
 I used an AI assistant (Claude) to help plan the project structure, to troubleshoot setup errors and to review my code. I tested the API in Swagger, ran all the tests and can explain the code in my video.
