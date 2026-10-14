@@ -179,7 +179,7 @@ Run `dotnet test RaceDay.Api.Tests/RaceDay.Api.Tests.csproj`, or use Test Explor
 GitHub Actions restores, builds and tests the solution on every push.
 
 ### GitHub Actions Screenshot
-![Green CI build](docs/ci-green-build.png)
+![Green CI build](docs/ci-green-build.png )
 
 ## Video Presentation
 [Part 2 video https://youtu.be/eI4RgX5tkyw ]
