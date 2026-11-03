@@ -1,0 +1,74 @@
+﻿@model ResultsPageVm
+@{
+    ViewData["Title"] = "Results";
+}
+<h1 class="rd-title mb-3">Results</h1>
+@if (!Model.Events.Any())
+{
+    <div class="alert alert-info">You have no events yet.</div>
+}
+else
+{
+    <div class="card rd-card mb-4">
+        <div class="card-body">
+            <form method="get" asp-action="Results">
+                <label class="form-label">Event</label>
+                <select name="eventId" class="form-select" onchange="this.form.submit()">
+                    @foreach (var e in Model.Events)
+                    {
+                        <option value="@e.EventId" selected="@(e.EventId == Model.EventId)">@e.EventName (@e.EventDate.ToString("dd MMM yyyy"))</option>
+                    }
+                </select>
+            </form>
+        </div>
+    </div>
+
+    <div class="card rd-card">
+        <div class="card-body">
+            @if (!Model.Enrolments.Any())
+            {
+                <p class="text-muted mb-0">Nobody has entered this event yet.</p>
+            }
+            else
+            {
+                <p class="text-muted">Results can only be captured for <strong>Confirmed</strong> enrolments. Write the finish time as hh:mm:ss.</p>
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead><tr><th>Participant</th><th>Category</th><th>Status</th><th>Result</th></tr></thead>
+                        <tbody>
+                            @foreach (var item in Model.Enrolments)
+                            {
+                                var result = Model.Results.FirstOrDefault(r => r.EnrolmentId == item.EnrolmentId);
+                                <tr>
+                                    <td>@item.ParticipantName</td>
+                                    <td>@item.CategoryName</td>
+                                    <td><partial name="_StatusBadge" model="item.Status" /></td>
+                                    <td>
+                                        @if (result != null)
+                                        {
+                                            <strong>@result.FinishTime.ToString("c")</strong> <span class="text-muted">(position @result.FinishingPosition)</span>
+                                        }
+                                        else if (item.Status == "Confirmed")
+                                        {
+                                            <form asp-action="CaptureResult" method="post" class="d-flex gap-2 flex-wrap">
+                                                <input type="hidden" name="eventId" value="@Model.EventId" />
+                                                <input type="hidden" name="enrolmentId" value="@item.EnrolmentId" />
+                                                <input name="finishTime" class="form-control form-control-sm w-auto" placeholder="hh:mm:ss" required pattern="\d{1,2}:\d{2}:\d{2}" />
+                                                <input name="finishingPosition" type="number" min="1" class="form-control form-control-sm w-auto" placeholder="Position" required />
+                                                <button type="submit" class="btn btn-sm btn-rd">Save result</button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Confirm this enrolment first</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+}

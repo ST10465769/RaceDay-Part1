@@ -1,32 +1,25 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using RaceDay.Mvc.Models;
-using System.Diagnostics;
 
-namespace RaceDay.Mvc.Controllers
+namespace RaceDay.Mvc.Controllers;
+
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    // Logged-in users go straight to their own home page
+    public IActionResult Index()
     {
-        private readonly ILogger<HomeController> _logger;
+        string? role = HttpContext.Session.GetString("Role");
+        if (role == "Organiser") return RedirectToAction("Index", "Organiser");
+        if (role == "Participant") return RedirectToAction("Index", "Participant");
+        return View();
+    }
 
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
+    public IActionResult AccessDenied() => View();
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error()
+    {
+        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

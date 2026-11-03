@@ -1,0 +1,80 @@
+﻿@model CategoriesPageVm
+@{
+    ViewData["Title"] = "Categories";
+}
+<h1 class="rd-title mb-3">Categories</h1>
+@if (!Model.Events.Any())
+{
+    <div class="alert alert-info">Create an event first, then you can add categories to it.</div>
+}
+else
+{
+    <div class="card rd-card mb-4">
+        <div class="card-body">
+            <form method="get" asp-action="Categories">
+                <label class="form-label">Event</label>
+                <select name="eventId" class="form-select" onchange="this.form.submit()">
+                    @foreach (var e in Model.Events)
+                    {
+                        <option value="@e.EventId" selected="@(e.EventId == Model.EventId)">@e.EventName (@e.EventDate.ToString("dd MMM yyyy"))</option>
+                    }
+                </select>
+            </form>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card rd-card">
+                <div class="card-body">
+                    <h4>Categories for this event</h4>
+                    @if (!Model.Categories.Any())
+                    {
+                        <p class="text-muted mb-0">No categories yet.</p>
+                    }
+                    else
+                    {
+                        <table class="table align-middle">
+                            <thead><tr><th>Name</th><th>Description</th><th></th></tr></thead>
+                            <tbody>
+                                @foreach (var c in Model.Categories)
+                                {
+                                    <tr>
+                                        <td><strong>@c.CategoryName</strong></td>
+                                        <td>@c.Description</td>
+                                        <td class="text-end">
+                                            <form asp-action="DeleteCategory" method="post" onsubmit="return confirm('Delete this category?');">
+                                                <input type="hidden" name="id" value="@c.CategoryId" />
+                                                <input type="hidden" name="eventId" value="@Model.EventId" />
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card rd-card">
+                <div class="card-body">
+                    <h4>Add a category</h4>
+                    <form asp-action="AddCategory" method="post">
+                        <input type="hidden" name="eventId" value="@Model.EventId" />
+                        <div class="mb-3">
+                            <label class="form-label">Name (e.g. Under 20, Senior, 10km)</label>
+                            <input name="categoryName" maxlength="50" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description (optional)</label>
+                            <input name="description" maxlength="200" class="form-control" />
+                        </div>
+                        <button type="submit" class="btn btn-rd">Add category</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}

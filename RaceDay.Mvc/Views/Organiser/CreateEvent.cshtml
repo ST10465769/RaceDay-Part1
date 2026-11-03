@@ -1,0 +1,9 @@
+﻿@model EventFormVm
+@{
+    ViewData["Title"] = "Create event"; ViewData["FormAction"] = "CreateEvent";
+}
+<h1 class="rd-title mb-3">Create event</h1>
+<div class="card rd-card"><div class="card-body p-4"><partial name="_EventForm" model="Model" view-data="ViewData" /></div></div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

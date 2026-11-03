@@ -1,0 +1,11 @@
+﻿@model string
+@{
+    // green for Confirmed, amber for Pending, grey for Cancelled (matches the brief)
+    var css = Model switch
+    {
+        "Confirmed" => "status-confirmed",
+        "Pending" => "status-pending",
+        _ => "status-cancelled"
+    };
+}
+<span class="status-badge @css">@Model</span>

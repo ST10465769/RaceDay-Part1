@@ -1,0 +1,65 @@
+﻿@model EnrolmentsPageVm
+@{
+    ViewData["Title"] = "Enrolments";
+}
+<h1 class="rd-title mb-3">Enrolments</h1>
+@if (!Model.Events.Any())
+{
+    <div class="alert alert-info">You have no events yet.</div>
+}
+else
+{
+    <div class="card rd-card mb-4">
+        <div class="card-body">
+            <form method="get" asp-action="Enrolments">
+                <label class="form-label">Event</label>
+                <select name="eventId" class="form-select" onchange="this.form.submit()">
+                    @foreach (var e in Model.Events)
+                    {
+                        <option value="@e.EventId" selected="@(e.EventId == Model.EventId)">@e.EventName (@e.EventDate.ToString("dd MMM yyyy"))</option>
+                    }
+                </select>
+            </form>
+        </div>
+    </div>
+
+    <div class="card rd-card">
+        <div class="card-body">
+            @if (!Model.Enrolments.Any())
+            {
+                <p class="text-muted mb-0">Nobody has entered this event yet.</p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead><tr><th>Participant</th><th>Category</th><th>Enrolled</th><th>Status</th><th>Change status</th></tr></thead>
+                        <tbody>
+                            @foreach (var item in Model.Enrolments)
+                            {
+                                <tr>
+                                    <td>@item.ParticipantName</td>
+                                    <td>@item.CategoryName</td>
+                                    <td>@item.EnrolmentDate.ToString("dd MMM yyyy")</td>
+                                    <td><partial name="_StatusBadge" model="item.Status" /></td>
+                                    <td>
+                                        <form asp-action="UpdateStatus" method="post" class="d-flex gap-2">
+                                            <input type="hidden" name="enrolmentId" value="@item.EnrolmentId" />
+                                            <input type="hidden" name="eventId" value="@Model.EventId" />
+                                            <select name="status" class="form-select form-select-sm w-auto">
+                                                <option value="Pending" selected="@(item.Status == "Pending")">Pending</option>
+                                                <option value="Confirmed" selected="@(item.Status == "Confirmed")">Confirmed</option>
+                                                <option value="Cancelled" selected="@(item.Status == "Cancelled")">Cancelled</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-sm btn-rd">Update</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+}

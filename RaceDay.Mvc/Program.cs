@@ -1,3 +1,5 @@
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 using RaceDay.Mvc.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +15,6 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-// Lets my API client read the current MVC session
 builder.Services.AddHttpContextAccessor();
 
 // One named HttpClient for my Part 2 API. The address comes from appsettings.json,
@@ -23,7 +24,10 @@ builder.Services.AddHttpClient("RaceDayApi", client =>
     string baseUrl = builder.Configuration["ApiSettings:BaseUrl"]
         ?? throw new InvalidOperationException("ApiSettings:BaseUrl is missing.");
     client.BaseAddress = new Uri(baseUrl);
-});
+})
+// UseCookies = false: HttpClient handlers are shared between users, so I must not let
+// them keep cookies. I store each user's API cookie in their own MVC session instead.
+.ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler { UseCookies = false });
 
 builder.Services.AddScoped<RaceDayApiClient>();
 
@@ -37,6 +41,16 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+// South African culture uses a comma for decimals, which breaks the distance input.
+// I force en-US so 42.2 always binds correctly.
+var culture = new CultureInfo("en-US");
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture(culture),
+    SupportedCultures = new List<CultureInfo> { culture },
+    SupportedUICultures = new List<CultureInfo> { culture }
+});
 
 app.UseRouting();
 
