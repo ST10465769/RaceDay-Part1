@@ -1,0 +1,33 @@
+﻿@model List<EnrolmentDto>
+@{
+    ViewData["Title"] = "My events";
+}
+<h1 class="rd-title mb-3">My events</h1>
+<div class="card rd-card">
+    <div class="card-body">
+        @if (!Model.Any())
+        {
+            <p class="text-muted mb-2">You haven't entered any events yet.</p>
+            <a asp-action="Index" class="btn btn-rd">Browse events</a>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead><tr><th>Event</th><th>Category</th><th>Entered on</th><th>Status</th><th></th></tr></thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td><strong>@item.EventName</strong></td>
+                                <td>@item.CategoryName</td>
+                                <td>@item.EnrolmentDate.ToString("dd MMM yyyy")</td>
+                                <td><partial name="_StatusBadge" model="item.Status" /></td>
+                                <td class="text-end"><a asp-action="EventDetails" asp-route-id="@item.EventId" class="btn btn-sm btn-outline-dark">Details</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div></div>
