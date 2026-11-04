@@ -207,6 +207,51 @@ public class EventsController : ControllerBase
         await _db.SaveChangesAsync();
         return NoContent();
     }
+    // POST /api/events/5/banner
+    [HttpPost("{id:int}/banner")]
+    [SessionAuthorize(UserRoles.Organiser)]
+    [Consumes("multipart/form-data")]
+    [SwaggerOperation(
+        Summary = "Upload an event banner",
+        Description = "Organiser only, and only for events they own. The image is stored in Azure Blob Storage and its URL is saved on the event.")]
+    [ProducesResponseType(typeof(UploadResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<UploadResponse>> UploadBanner(int id, IFormFile file, [FromServices] BlobStorageService blobStorage)
+    {
+        var ev = await _db.Events.FindAsync(id);
+        if (ev == null)
+        {
+            return NotFound(new { message = "Event does not exist." });
+        }
+
+        // Same ownership rule as editing the event
+        if (ev.OrganiserId != HttpContext.Session.GetUserId())
+        {
+            return NotOwner();
+        }
+
+        string? problem = BlobStorageService.Validate(file);
+        if (problem != null)
+        {
+            return BadRequest(new { message = problem });
+        }
+
+        try
+        {
+            string url = await blobStorage.UploadAsync(file, "event-banners");
+            ev.BannerImageUrl = url;
+            await _db.SaveChangesAsync();
+            return Ok(new UploadResponse { Url = url });
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                new { message = "The image could not be uploaded. Please try again later." });
+        }
+    }
 
     // Builds the EventDto straight from the database so I don't repeat the mapping
     private IQueryable<EventDto> EventQuery()
