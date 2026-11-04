@@ -16,6 +16,7 @@ namespace RaceDay.Api
 
             // The controller asks for IPasswordHasher and gets my PBKDF2 PasswordHasher
             builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+            builder.Services.AddScoped<BlobStorageService>();
 
             // Sessions keep the logged-in UserId and Role on the server.
             // The browser only gets a session cookie, not the data itself.
