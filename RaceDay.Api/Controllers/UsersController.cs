@@ -72,6 +72,44 @@ public class UsersController : ControllerBase
         await _db.SaveChangesAsync();
         return Ok(ToDto(user));
     }
+    // POST /api/users/profile/picture
+    [HttpPost("profile/picture")]
+    [Consumes("multipart/form-data")]
+    [SwaggerOperation(
+        Summary = "Upload my profile picture",
+        Description = "Stores the image in Azure Blob Storage and saves its URL on the logged-in user's profile.")]
+    [ProducesResponseType(typeof(UploadResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<UploadResponse>> UploadProfilePicture(IFormFile file, [FromServices] BlobStorageService blobStorage)
+    {
+        int userId = HttpContext.Session.GetInt32(SessionKeys.UserId)!.Value;
+
+        var user = await _db.Users.FindAsync(userId);
+        if (user == null)
+        {
+            return NotFound(new { message = "User not found." });
+        }
+
+        string? problem = BlobStorageService.Validate(file);
+        if (problem != null)
+        {
+            return BadRequest(new { message = problem });
+        }
+
+        try
+        {
+            string url = await blobStorage.UploadAsync(file, "profile-pictures");
+            user.ProfilePictureUrl = url;
+            await _db.SaveChangesAsync();
+            return Ok(new UploadResponse { Url = url });
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                new { message = "The image could not be uploaded. Please try again later." });
+        }
+    }
 
     // Turns an AppUser into a ProfileDto (no password hash)
     private static ProfileDto ToDto(AppUser user)
