@@ -69,4 +69,23 @@ public class UploadTests : IClassFixture<RaceDayFactory>
         var response = await client.PostAsync("/api/users/profile/picture", FakeFile());
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
+
+    [Fact]
+    public async Task Image_WhenNotLoggedIn_Returns401()
+    {
+        var client = _factory.CreateClient();
+        var response = await client.GetAsync("/api/images/event-banners/test.jpg");
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Image_OutsideAllowedFolders_Returns400()
+    {
+        var (client, _, _) = await TestHelpers.RegisterAndLogin(_factory, "Participant");
+        var response = await client.GetAsync("/api/images/secret/file.jpg");
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
 }
+
+    
