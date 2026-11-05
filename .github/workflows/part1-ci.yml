@@ -24,10 +24,15 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Restore packages
-        run: dotnet restore RaceDay.Api.Tests/RaceDay.Api.Tests.csproj
+        run: |
+          dotnet restore RaceDay.Api.Tests/RaceDay.Api.Tests.csproj
+          dotnet restore RaceDay.Mvc/RaceDay.Mvc.csproj
 
-      - name: Build
+      - name: Build API and tests
         run: dotnet build RaceDay.Api.Tests/RaceDay.Api.Tests.csproj --configuration Release --no-restore
+
+      - name: Build MVC project
+        run: dotnet build RaceDay.Mvc/RaceDay.Mvc.csproj --configuration Release --no-restore
 
       - name: Run unit tests
         run: dotnet test RaceDay.Api.Tests/RaceDay.Api.Tests.csproj --configuration Release --no-build --verbosity normal
