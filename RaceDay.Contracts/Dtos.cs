@@ -197,6 +197,9 @@ public class ResultDto
     public string ParticipantName { get; set; } = string.Empty;
     public TimeSpan FinishTime { get; set; }
     public int FinishingPosition { get; set; }
+
+    // How many participants have a recorded result for this event (for "47th out of 312")
+    public int TotalFinishers { get; set; }
 }
 
 // ---------- Part 3 (image uploads) ----------

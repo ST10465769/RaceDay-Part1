@@ -10,7 +10,7 @@
                 <div class="text-center mb-3">
                     @if (!string.IsNullOrWhiteSpace(Model.ProfilePictureUrl))
                     {
-                        <img src="@Model.ProfilePictureUrl" alt="Profile picture" class="profile-pic" />
+                        <img src="@Model.ProfilePictureUrl.ImageSrc()" alt="Profile picture" class="profile-pic" />
                     }
                     else
                     {

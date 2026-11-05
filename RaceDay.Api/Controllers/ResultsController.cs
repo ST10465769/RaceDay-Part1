@@ -133,7 +133,8 @@ public class ResultsController : ControllerBase
             CategoryName = r.Enrolment.Category.CategoryName,
             ParticipantName = r.Enrolment.Participant.FirstName + " " + r.Enrolment.Participant.LastName,
             FinishTime = r.FinishTime,
-            FinishingPosition = r.FinishingPosition
+            FinishingPosition = r.FinishingPosition,
+            TotalFinishers = r.Enrolment.Event.Enrolments.Count(e => e.Result != null)
         });
     }
 

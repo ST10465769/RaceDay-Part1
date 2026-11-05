@@ -24,7 +24,7 @@
                                 <td>
                                     @if (!string.IsNullOrWhiteSpace(e.BannerImageUrl))
                                     {
-                                        <img src="@e.BannerImageUrl" class="event-thumb" alt="banner" />
+                                        <img src="@e.BannerImageUrl.ImageSrc()" class="event-thumb" alt="banner" />
                                     }
                                 </td>
                                 <td><strong>@e.EventName</strong><br /><small class="text-muted">@e.Location</small></td>

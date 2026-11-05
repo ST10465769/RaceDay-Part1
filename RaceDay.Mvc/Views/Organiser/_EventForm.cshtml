@@ -44,7 +44,7 @@
             <label class="form-label">Event banner (JPG, PNG, GIF or WebP, 5 MB at most)</label>
             @if (!string.IsNullOrWhiteSpace(Model.BannerImageUrl))
             {
-                <div class="mb-2"><img src="@Model.BannerImageUrl" class="event-hero-img" style="max-height:140px;width:auto;" alt="Current banner" /></div>
+                <div class="mb-2"><img src="@Model.BannerImageUrl.ImageSrc()" class="event-hero-img" style="max-height:140px;width:auto;" alt="Current banner" /></div>
             }
             <input type="file" name="banner" class="form-control" accept="image/*" />
         </div>

@@ -7,7 +7,7 @@
     <div class="col-lg-8">
         @if (!string.IsNullOrWhiteSpace(Model.Event.BannerImageUrl))
         {
-            <img src="@Model.Event.BannerImageUrl" alt="@Model.Event.EventName banner" class="event-hero-img" />
+            <img src="@Model.Event.BannerImageUrl.ImageSrc()" alt="@Model.Event.EventName banner" class="event-hero-img" />
         }
         else
         {

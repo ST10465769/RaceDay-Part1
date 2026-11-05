@@ -2,7 +2,7 @@
 <div class="card rd-card event-card h-100">
     @if (!string.IsNullOrWhiteSpace(Model.BannerImageUrl))
     {
-        <img src="@Model.BannerImageUrl" alt="@Model.EventName banner" />
+        <img alt src="@Model.BannerImageUrl.ImageSrc()" "@Model.EventName banner" />
     }
     else
     {
