@@ -280,7 +280,7 @@ GitHub Actions restores and builds the API, the MVC project and the tests on eve
 - The Part 2 version of this project is tagged `part2-final`.
 
 ## Video Presentation
-[Part 3 video (unlisted YouTube)](PASTE_YOUR_PART_3_LINK_HERE)
+[Part 3 video (unlisted YouTube)](https://youtu.be/K_YFW7B4qcg)
 
 ## AI Disclosure
-I used an AI assistant (Claude) to help plan the MVC structure, to troubleshoot setup, Docker and Git errors, and to review my code. I tested each feature in the browser, in Swagger and in Docker, ran the unit tests, and can explain the code in my video.
+I used an AI assistant to help plan the MVC structure.
