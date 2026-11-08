@@ -271,7 +271,7 @@ Run `dotnet test RaceDay.Api.Tests/RaceDay.Api.Tests.csproj`. The tests cover au
 GitHub Actions restores and builds the API, the MVC project and the tests on every push, then runs all the unit tests.
 
 ### GitHub Actions Screenshot
-![Green CI build for Part 3](docs/ci-green-build-part3.png)
+![Green CI build for Part 3](https://github.com/ST10465769/RaceDay-Part1/blob/main/ci-green-build-part3.png%20(2).png)
 
 ## Differences and Notes
 - The MVC client does not let the HTTP handler keep cookies (`UseCookies = false`). The API cookie is stored per user in the MVC session, so one user's API login is never reused for another user.
